@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "knowledge-management": {
+      "command": "python",
+      "args": ["-m", "mcp_knowledge_server.server"],
+      "cwd": "c:/Users/LangZheZR/Documents/road/py_scripts/knowledge_management_mcp"
+    }
+  }
+}
