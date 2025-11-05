@@ -63,49 +63,51 @@ cp .env.example .env
 ### 4. Install Dependencies
 
 ```bash
-npm install
+pip install -r requirements.txt
 ```
 
 ## Usage
 
-```typescript
-import { LearningSystemClient } from './src/client';
+```python
+import os
+from client import LearningSystemClient, LearningResource, Observation, Takeaway
 
-const client = new LearningSystemClient(
-  process.env.SUPABASE_URL!,
-  process.env.SUPABASE_ANON_KEY!
-);
+# Initialize client
+client = LearningSystemClient(
+    supabase_url=os.getenv('SUPABASE_URL'),
+    supabase_key=os.getenv('SUPABASE_ANON_KEY')
+)
 
-// Add a learning resource
-const resource = await client.resources.create({
-  title: 'Attention Is All You Need',
-  source_url: 'https://arxiv.org/abs/1706.03762',
-  content_text: 'The dominant sequence transduction models...',
-  resource_type: 'paper',
-  tags: ['transformers', 'attention']
-});
+# Add a learning resource
+resource = client.resources.create(LearningResource(
+    title='Attention Is All You Need',
+    source_url='https://arxiv.org/abs/1706.03762',
+    content_text='The dominant sequence transduction models...',
+    resource_type='paper',
+    tags=['transformers', 'attention']
+))
 
-// Capture an observation
-const observation = await client.observations.create({
-  content: 'Multi-head attention shows 15% improvement',
-  experiment_id: 'exp-001',
-  context: { model: 'transformer-base', metric: 'BLEU' }
-});
+# Capture an observation
+observation = client.observations.create(Observation(
+    content='Multi-head attention shows 15% improvement',
+    experiment_id='exp-001',
+    context={'model': 'transformer-base', 'metric': 'BLEU'}
+))
 
-// Create a takeaway
-const takeaway = await client.takeaways.create({
-  insight: 'Multiple attention heads capture different dependencies',
-  assumption_before: 'Single attention is sufficient',
-  assumption_after: 'Multiple heads improve representation',
-  observation_ids: [observation.id],
-  resource_ids: [resource.id]
-});
+# Create a takeaway
+takeaway = client.takeaways.create(Takeaway(
+    insight='Multiple attention heads capture different dependencies',
+    assumption_before='Single attention is sufficient',
+    assumption_after='Multiple heads improve representation',
+    observation_ids=[observation['id']],
+    resource_ids=[resource['id']]
+))
 ```
 
 ## Run Example
 
 ```bash
-npm run example
+python example.py
 ```
 
 ## API Methods
